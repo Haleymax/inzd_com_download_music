@@ -75,16 +75,20 @@ class MusicWeb(Request):
         except Exception as e:
             logger.warning(f"写入文件失败，原因：{e}")
 
-def star_spider():
+def spider(singers):
     logger.info("___________开始爬虫___________")
+    for singer in singers:
+        search_and_download(singer)
+    logger.info("___________爬取完毕___________")
+
+def search_and_download(singer):
     spider = MusicWeb(read_config.get_baseurl())
-    singer = input("请输入歌手 : ")
     spider.search_singer(singer)
     spider.get_singer_page_info()
     spider.get_all_music_page_link()
     spider.get_all_music_link()
     spider.save_date_to_csv()
-    logger.info("___________爬取完毕___________")
+
 
 if __name__ == '__main__':
-    star_spider()
+    spider(["周杰伦","林俊杰","蔡依林"])
