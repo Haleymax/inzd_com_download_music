@@ -81,7 +81,7 @@ def spider(singers):
         search_and_download(singer)
     logger.info("___________爬取完毕___________")
 
-def search_and_download(singer):
+async def search_and_download(singer):
     spider = MusicWeb(read_config.get_baseurl())
     spider.search_singer(singer)
     spider.get_singer_page_info()
