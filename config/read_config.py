@@ -26,5 +26,21 @@ class ReadConfig:
         config = self.data["spider"]
         return str(config['agent'])
 
+    def get_host(self):
+        logger.info("获取主机地址")
+        config = self.data["database"]
+        return str(config['host'])
+
+    def get_mongo_port(self):
+        logger.info("获取mongodb的端口")
+        config = self.data["database"]
+        return str(config['port'])
+
+    def get_collection(self):
+        logger.info("获取集合")
+        config = self.data["database"]
+        return str(config['collection'])
+
+
 
 read_config = ReadConfig()
