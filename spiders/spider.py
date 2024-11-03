@@ -7,7 +7,7 @@ import requests
 from config.read_config import read_config
 from settings.all_path import data_path
 from spiders.regex import singer_page_regex, song_url_regex, input_pattern_regex
-from util.download import start_download_thread
+from util.data_processing import information
 from util.get_request import Request
 from util.logger import logger
 
@@ -51,9 +51,14 @@ class MusicWeb(Request):
         self.respon = requests.get(self.music_page_url, headers=self.headers)
         music_link =input_pattern_regex.findall(self.respon.text)[0]
         self.mp3_link_dick[self.name] = music_link
-        logger.info(f"start download {self.name}")
-        self.mp3_link_dick[self.name] = music_link
-        start_download_thread(music_link, self.name)
+        # logger.info(f"start download {self.name}")
+        # self.mp3_link_dick[self.name] = music_link
+        logger.info(f"music link:{music_link}")
+        data = {self.name: music_link}
+        information.insert_data_to_mongo(data)
+
+       # 暂搁下载逻辑，先将爬取到的数据存放在数据库中，后续下载，这样可以将下载和爬虫分布在不同的机器上
+        # start_download_thread(music_link, self.name)
 
     def save_date_to_csv(self):
         csv_path = os.path.join(data_path,"mp3.csv")
@@ -81,7 +86,7 @@ def spider(singers):
         search_and_download(singer)
     logger.info("___________爬取完毕___________")
 
-async def search_and_download(singer):
+def search_and_download(singer):
     spider = MusicWeb(read_config.get_baseurl())
     spider.search_singer(singer)
     spider.get_singer_page_info()

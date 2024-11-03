@@ -41,6 +41,10 @@ class ReadConfig:
         config = self.data["database"]
         return str(config['collection'])
 
+    def get_database(self):
+        logger.info("获取数据库")
+        config = self.data["database"]
+        return str(config['mongo_database'])
 
 
 read_config = ReadConfig()
